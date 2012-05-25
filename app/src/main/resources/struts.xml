@@ -15,12 +15,6 @@
                 <param name="loginResult">login</param>
             </interceptor>
 
-            <interceptor name="TestInterceptor" class="com.lchl.app.java.interceptor.TestInterceptor" />
-            <interceptor-stack name="TestStack">
-                <interceptor-ref name="TestInterceptor" />
-                <interceptor-ref name="defaultStack" />
-            </interceptor-stack>
-
             <interceptor name="logger" class="com.lchl.app.java.interceptor.LoggerInterceptor">
                 <param name="type">console</param>
             </interceptor>
@@ -56,25 +50,6 @@
         <action name="logger" class="com.lchl.app.java.action.LoggerAction">
             <interceptor-ref name="loggerStack"/>
             <result name="success">/index.html</result>
-        </action>
-
-        <action name="fileupload" class="com.lchl.app.java.action.FileUploadAction">
-            <interceptor-ref name="exception"/>
-            <interceptor-ref name="i18n"/>
-            <interceptor-ref name="fileUpload">
-                <param name="maximumSize">104857600</param>
-            </interceptor-ref>
-            <interceptor-ref name="params">
-                <param name="excludeParams">dojo\..*,^struts\..*</param>
-            </interceptor-ref>
-            <interceptor-ref name="validation">
-                <param name="excludeMethods">input,back,cancel,browse</param>
-            </interceptor-ref>
-            <interceptor-ref name="workflow">
-                <param name="excludeMethods">input,back,cancel,browse</param>
-            </interceptor-ref>
-            <result name="success">/upload.jsp</result>
-            <result name="input">/upload.jsp</result>
         </action>
     </package>
 
