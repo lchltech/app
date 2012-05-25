@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.1.7//EN"
+        "http://struts.apache.org/dtds/struts-2.1.7.dtd">
+
+<struts>
+    <constant name="struts.multipart.maxSize" value="104857600" />
+    <constant name="struts.multipart.saveDir" value ="/temp" />
+
+    <package name="default" extends="struts-default" namespace="/">
+        <interceptors>
+            <interceptor name="login" class="com.lchl.app.java.interceptor.LoginInterceptor">
+                <param name="user">user</param>
+                <param name="loginResult">login</param>
+            </interceptor>
+
+            <interceptor name="TestInterceptor" class="com.lchl.app.java.interceptor.TestInterceptor" />
+            <interceptor-stack name="TestStack">
+                <interceptor-ref name="TestInterceptor" />
+                <interceptor-ref name="defaultStack" />
+            </interceptor-stack>
+
+            <interceptor name="logger" class="com.lchl.app.java.interceptor.LoggerInterceptor">
+                <param name="type">console</param>
+            </interceptor>
+            <interceptor-stack name="loggerStack">
+                <interceptor-ref name="login" />
+                <interceptor-ref name="logger" />
+                <interceptor-ref name="defaultStack" />
+            </interceptor-stack>
+        </interceptors>
+
+        <global-results>
+            <result name="login">/login.jsp</result>
+            <result name="exception">/global-exception.html</result>
+        </global-results>
+
+        <global-exception-mappings>
+            <exception-mapping exception="java.lang.ArithmeticException" result="exception"/>
+            <exception-mapping exception="java.lang.Exception" result="exception"/>
+        </global-exception-mappings>
+
+        <action name="login" class="com.lchl.app.java.action.LoginAction">
+            <result name="success">/index.jsp</result>
+            <result name="input">/login.jsp</result>
+            <interceptor-ref name="TestStack" />
+        </action>
+
+        <action name="exception" class="com.lchl.app.java.action.ExceptionAction">
+            <exception-mapping exception="java.lang.ArithmeticException" result="exception"/>
+            <result name="exception">/exception.html</result>
+            <result name="success">/index.html</result>
+        </action>
+
+        <action name="logger" class="com.lchl.app.java.action.LoggerAction">
+            <interceptor-ref name="loggerStack"/>
+            <result name="success">/index.html</result>
+        </action>
+
+        <action name="fileupload" class="com.lchl.app.java.action.FileUploadAction">
+            <interceptor-ref name="exception"/>
+            <interceptor-ref name="i18n"/>
+            <interceptor-ref name="fileUpload">
+                <param name="maximumSize">104857600</param>
+            </interceptor-ref>
+            <interceptor-ref name="params">
+                <param name="excludeParams">dojo\..*,^struts\..*</param>
+            </interceptor-ref>
+            <interceptor-ref name="validation">
+                <param name="excludeMethods">input,back,cancel,browse</param>
+            </interceptor-ref>
+            <interceptor-ref name="workflow">
+                <param name="excludeMethods">input,back,cancel,browse</param>
+            </interceptor-ref>
+            <result name="success">/upload.jsp</result>
+            <result name="input">/upload.jsp</result>
+        </action>
+    </package>
+
+    <include file="struts-fileupload.xml" />
+</struts>
